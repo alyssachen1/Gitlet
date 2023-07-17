@@ -9,7 +9,6 @@ import static gitlet.Utils.*;
 public class Staging {
     public static final File STAGING_AREA = join(Repository.GITLET_DIR, ".staging");
     private Map<String, File> stagedFiles;
-    private
 
     public Staging() {
         if (!STAGING_AREA.exists()) {
@@ -46,6 +45,10 @@ public class Staging {
         else {
             return false;
         }
+    }
+
+    public void remove(String filename) {
+        return;
     }
 
     public void rm (String filename) {

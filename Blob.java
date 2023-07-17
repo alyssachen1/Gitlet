@@ -1,20 +1,44 @@
 package gitlet;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.*;
-import java.util.HashMap;
-public class Blob {
+import java.io.Serializable;
+import java.io.File;
+
+public class Blob implements Serializable {
 //    private ArrayList<String> blobs;
 
-    private String commitVersion; //ssid
+    private final File source;
 
-    private String fileName;
+    private final byte[] content;
+
+    private final String id;
+
+    private final File file;
 
     private String contents;
 
-    public Blob(String name) {
-        this.commitVersion =
-        this.fileName =
-        this.contents = Utils.readContentsAsString(//file);
+    public Blob(File source) {
+        this.source = source;
+        this.content = Utils.readContents(source);
+        String filePath = source.getPath();
+        this.id = Utils.sha1(filePath, this.content);
+        this.file = getFile(this.id);
     }
+
+    public File getFile (String id) {
+        String dirName = id.substring(1, 2);
+        String fileName = id.substring(2);
+        return Utils.join(Repository.GITLET_DIR, dirName, fileName);
+    }
+
+    public static void saveObjectFile(File file, Serializable object) {
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        Utils.writeObject(file, object);
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
 }
